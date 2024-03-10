@@ -2,8 +2,8 @@
 #include <iostream>
 #include <cstdlib> // we need this for the rand() function
 #include <chrono> // we need this for system_clock (current time in milliseconds)
-#include <unistd.h> // we need this for the sleep() function
 #include <string> // we need this for the getline() function
+#include <conio.h> // for _getch()
 
 using namespace std;
 using namespace std::chrono; // Helps us simplify our code for time in ms
@@ -32,6 +32,7 @@ using namespace std::chrono; // Helps us simplify our code for time in ms
 #define WARRIOR_MIN_STRENGTH 0
 #define WARRIOR_MAX_STRENGTH 200
 #define WARRIOR_MAX_ARMOR 200
+#define WARRIOR_MIN_ARMOR 10
 #define WARRIOR_CHAIN_WAIT_MS 300
 #define ROGUE_MIN_AGILITY 0
 #define ROGUE_MAX_AGILITY 100
@@ -152,6 +153,9 @@ int main() {
     // Now we move on to the main gameplay based on the user's choice
     loadGame((char)tolower(userChoice));
 
+    cout << "Press any key to continue.";
+    _getch();
+    
     // Finally, we show a simple game over screen
     system("cls");
     PrintDivider(); PrintDivider();
@@ -160,9 +164,9 @@ int main() {
     << endl << "You dealt " << PlayerDamageDealt << " hit points in damage"
     << endl << "You received " << PlayerDamageTaken << " hit points in damage" << endl;
     PrintDivider(); PrintDivider();
-    cout << "Press enter to exit.";
-    getline(cin, PlayerName); // doesn't matter what value we put here because it will be deleted anyway,
-                                    // we just want to wait for user to press enter
+    cout << "Press any key to exit.";
+    _getch();
+
     return NO_ERRORS;
 }
 
@@ -176,9 +180,9 @@ void PrintDivider(){
 void WarriorGame(){
     PrintDivider(); PrintDivider();
     cout << WarriorStory[0] << endl;
-    Warrior player(PlayerName, 2, 5, 5);
+    Warrior player(PlayerName, 2, 5, 15);
     Character enemy("Battle Dummy", 1);
-    Warrior enemy1("Maximus the Impaler", 1, 5, 5);
+    Warrior enemy1("Maximus the Impaler", 1, 5, 10);
     Mage enemy2("Prometheus the Wise", 1, 15, 30);
     Rogue enemy3("Geralt of Rivia", 1, 10, 10);
     int currentResult; bool firstInstance = true;
@@ -187,11 +191,9 @@ void WarriorGame(){
     currentResult = Battle(player, enemy);
     ShowBattleResult(currentResult, player.get_name(), enemy.get_name());
     if(currentResult != BATTLE_FIRST_WON){
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
         return;
     }
     PlayerWinCount++;
-    usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
     while(true){
         if(!firstInstance){
@@ -207,11 +209,9 @@ void WarriorGame(){
         currentResult = Battle(player, enemy1);
         ShowBattleResult(currentResult, player.get_name(), enemy1.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a mage
         cout << "You encounter PROMETHEUS THE WISE" << endl;
@@ -219,11 +219,9 @@ void WarriorGame(){
         currentResult = Battle(player, enemy2);
         ShowBattleResult(currentResult, player.get_name(), enemy2.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a rogue
         cout << "You encounter GERALT OF RIVIA";
@@ -231,11 +229,9 @@ void WarriorGame(){
         currentResult = Battle(player, enemy3);
         ShowBattleResult(currentResult, player.get_name(), enemy3.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // everyone gets leveled up
         player.level_up();
@@ -248,22 +244,20 @@ void WarriorGame(){
 void RogueGame(){
     PrintDivider(); PrintDivider();
     cout << RogueStory[0] << endl;
-    Rogue player(PlayerName, 2, 10, 10);
+    Rogue player(PlayerName, 2, 5, 5);
     Character enemy("Battle Dummy", 1);
     Warrior enemy1("Maximus the Impaler", 1, 5, 5);
     Mage enemy2("Prometheus the Wise", 1, 15, 30);
-    Rogue enemy3("Geralt of Rivia", 1, 10, 10);
+    Rogue enemy3("Geralt of Rivia", 1, 5, 5);
     int currentResult; bool firstInstance = true;
 
     // battle with the dummy
     currentResult = Battle(player, enemy);
     ShowBattleResult(currentResult, player.get_name(), enemy.get_name());
     if(currentResult != BATTLE_FIRST_WON){
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
         return;
     }
     PlayerWinCount++;
-    usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
     while(true){
         if(!firstInstance){
@@ -279,11 +273,9 @@ void RogueGame(){
         currentResult = Battle(player, enemy1);
         ShowBattleResult(currentResult, player.get_name(), enemy1.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a mage
         cout << "You encounter PROMETHEUS THE WISE" << endl;
@@ -291,11 +283,9 @@ void RogueGame(){
         currentResult = Battle(player, enemy2);
         ShowBattleResult(currentResult, player.get_name(), enemy2.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a rogue
         cout << "You encounter GERALT OF RIVIA";
@@ -303,11 +293,9 @@ void RogueGame(){
         currentResult = Battle(player, enemy3);
         ShowBattleResult(currentResult, player.get_name(), enemy3.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // everyone gets leveled up
         player.level_up();
@@ -332,11 +320,9 @@ void MageGame(){
     currentResult = Battle(player, enemy);
     ShowBattleResult(currentResult, player.get_name(), enemy.get_name());
     if(currentResult != BATTLE_FIRST_WON){
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
         return;
     }
     PlayerWinCount++;
-    usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
     while(true){
         if(!firstInstance){
@@ -352,11 +338,9 @@ void MageGame(){
         currentResult = Battle(player, enemy1);
         ShowBattleResult(currentResult, player.get_name(), enemy1.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a mage
         cout << "You encounter PROMETHEUS THE WISE" << endl;
@@ -364,11 +348,9 @@ void MageGame(){
         currentResult = Battle(player, enemy2);
         ShowBattleResult(currentResult, player.get_name(), enemy2.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // battle with a rogue
         cout << "You encounter GERALT OF RIVIA";
@@ -376,11 +358,9 @@ void MageGame(){
         currentResult = Battle(player, enemy3);
         ShowBattleResult(currentResult, player.get_name(), enemy3.get_name());
         if(currentResult != BATTLE_FIRST_WON){
-            usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
             return;
         }
         PlayerWinCount++;
-        usleep(TIMING_DEFAULT_SLEEP_PERIOD); // wait two seconds
 
         // everyone gets leveled up
         player.level_up();
@@ -429,17 +409,10 @@ int Battle(Character& First, Character& Second){
     int received;
     int dealt;
     // Deal damages
-    // this helps keep the game engaging and fight feel realistic
-    usleep(getRand(BATTLE_MINIMUM_SLEEP_MS,BATTLE_MAXIMUM_SLEEP_MS)
-            *MICROSECOND_TO_MILLISECONDS
-            ); // Sleep from one hundred milliseconds to one second
     dealt = First.get_damage(First.level);
     PlayerDamageDealt += dealt;
     Second.take_damage(dealt);
     // this helps keep the game engaging and fight feel realistic
-    usleep(getRand(BATTLE_MINIMUM_SLEEP_MS,BATTLE_MAXIMUM_SLEEP_MS)
-           *MICROSECOND_TO_MILLISECONDS
-    ); // Sleep from one hundred milliseconds to one second
     received = Second.get_damage(Second.level);
     PlayerDamageTaken += received;
     First.take_damage(received);
@@ -474,8 +447,6 @@ void ShowBattleResult(const int& Result, const string& Name1, const string& Name
  * @return a random value
  */
 int getRand(const int& min, const int& max){
-    // sleep upto 20 milliseconds, helps improve randomness
-    usleep((1 + rand() % (20))*1000);
     // First we get a reasonable seed, one of the methods of this is just to get the current time in ms
     // source: https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
@@ -580,7 +551,9 @@ void Warrior::take_damage(const int& received_damage) {
     }
     // Reduce received damage linearly with armor
     // We also add a minimum value for damage in-case armor is too effective
-    health_points -= max(1, (int)((double)received_damage * ((double)armor/(double)WARRIOR_MAX_ARMOR)));
+    health_points -= max(1, (int)((double)received_damage * (double)WARRIOR_MIN_ARMOR/((double)armor)));
+    //cout << name << " MF: " <<  (double)WARRIOR_MIN_ARMOR / (double)armor << endl;
+    //cout << name << " HP: " << health_points << endl;
 }
 void Rogue::take_damage(const int& received_damage) {
     // The rogue can either dodge the hit or not
@@ -639,7 +612,6 @@ int Warrior::get_damage(const int& outputted_damage) {
         cout << name << " IS FURIOUS" << endl;
         for(int i = 0; i < WARRIOR_FURY_CHAIN_ATTACK_AMOUNT*level; i++){
             damage += get_damage(outputted_damage);
-            usleep(WARRIOR_CHAIN_WAIT_MS * 1000);
         }
         do_not_chain = false;
         return damage;
@@ -656,7 +628,6 @@ int Warrior::get_damage(const int& outputted_damage) {
     // If the warrior landed a bind, attack multiple times
     for(int i = 0; i < WARRIOR_BIND_CHAIN_ATTACK_AMOUNT*level; i++){
         damage += get_damage(outputted_damage);
-        usleep(WARRIOR_CHAIN_WAIT_MS * 1000);
     }
     do_not_chain = false;
     return damage;
